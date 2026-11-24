@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AQUACAST — System Usability & Performance Testing Protocol</title>
+  <style>
+    :root {
+      --navy: #0f2742;
+      --teal: #0d9488;
+      --teal-dark: #0f766e;
+      --teal-light: #f0fdfa;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-600: #475569;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --amber-border: #fef3c7;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: var(--font-sans);
+      color: var(--slate-800);
+      background: var(--slate-100);
+      margin: 0;
+      padding: 32px 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .doc-container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 48px 56px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--slate-200);
+    }
+
+    .doc-header {
+      border-bottom: 2px solid var(--slate-200);
+      padding-bottom: 28px;
+      margin-bottom: 32px;
+    }
+
+    .doc-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: var(--teal-light);
+      color: var(--teal);
+      border: 1px solid rgba(13, 148, 136, 0.25);
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0 0 10px 0;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+
+    .doc-subtitle {
+      font-size: 16px;
+      color: var(--slate-600);
+      margin: 0;
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: #ffffff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-dark);
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: var(--slate-800);
+      border: 1px solid var(--slate-200);
+    }
+
+    .btn-outline:hover {
+      background: var(--slate-50);
+      border-color: var(--teal);
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 750;
+      color: var(--navy);
+      border-bottom: 1px solid var(--slate-200);
+      padding-bottom: 8px;
+      margin-top: 40px;
+      margin-bottom: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px 0;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--slate-200);
+    }
+
+    th {
+      background: var(--slate-50);
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fafbfc;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 750;
+      color: var(--slate-900);
+      margin: 0;
+    }
+
+    .card-id {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--slate-100);
+      color: var(--slate-600);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .steps-list {
+      margin: 8px 0 14px 20px;
+      padding: 0;
+    }
+
+    .steps-list li {
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .expected-box {
+      background: var(--slate-50);
+      border-left: 3px solid var(--teal);
+      padding: 12px 16px;
+      font-size: 14px;
+      margin-bottom: 14px;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .expected-box strong {
+      color: var(--teal-dark);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .eval-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--slate-200);
+      font-size: 13.5px;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .notes-line {
+      flex: 1 1 240px;
+      border-bottom: 1px solid #cbd5e1;
+      height: 24px;
+    }
+
+    .toc-box {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 8px;
+      padding: 18px 24px;
+      margin: 24px 0 32px 0;
+    }
+
+    .toc-box ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+      columns: 2;
+    }
+
+    .toc-box a {
+      color: var(--teal-dark);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .toc-box a:hover {
+      text-decoration: underline;
+    }
+
+    .alert {
+      background: var(--amber-light);
+      border: 1px solid var(--amber-border);
+      border-left: 4px solid var(--amber);
+      color: #78350f;
+      padding: 12px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      margin: 18px 0;
+    }
+
+    .textarea-blank {
+      width: 100%;
+      height: 70px;
+      border: 1px solid var(--slate-200);
+      border-radius: 6px;
+      background: #fafbfc;
+      margin-top: 8px;
+    }
+
+    @media print {
+      body { background: #ffffff; padding: 0; }
+      .doc-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+      .top-actions, .btn { display: none !important; }
+      .card { page-break-inside: avoid; }
+      h2 { page-break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="doc-container">
+    <div class="top-actions">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <a class="btn btn-outline" href="../index.html">← Back to AQUACAST</a>
+    </div>
+
+    <header class="doc-header">
+      <span class="doc-badge">AQUACAST · UAT PROTOCOL</span>
+      <h1>System Usability & Performance Testing Protocol</h1>
+      <p class="doc-subtitle">User Acceptance Testing (UAT), Functional Verification, and Stakeholder Alignment Guide</p>
+    </header>
+
+    <h2>Document Control & Tester Metadata</h2>
+    <table>
+      <tbody>
+        <tr>
+          <td style="width:25%"><strong>System Version</strong></td>
+          <td>AQUACAST v3.9.6 (Multi-Year 2021–2026 Sandbox)</td>
+          <td style="width:25%"><strong>Evaluation Horizon</strong></td>
+          <td>72 Months (4,464 Synthetic Observations)</td>
+        </tr>
+        <tr>
+          <td><strong>Tester Name</strong></td>
+          <td><span style="border-bottom: 1px dotted #94a3b8; display: inline-block; width: 100%; height: 20px;"></span></td>
+          <td><strong>Organization / Role</strong></td>
+          <td><span style="border-bottom: 1px dotted #94a3b8; display: inline-block; width: 100%; height: 20px;"></span></td>
+        </tr>
+        <tr>
+          <td><strong>Testing Date & Time</strong></td>
+          <td><span style="border-bottom: 1px dotted #94a3b8; display: inline-block; width: 100%; height: 20px;"></span></td>
+          <td><strong>Browser & OS</strong></td>
+          <td><span style="border-bottom: 1px dotted #94a3b8; display: inline-block; width: 100%; height: 20px;"></span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <nav class="toc-box">
+      <strong>Quick Navigation</strong>
+      <ul>
+        <li><a href="#test-env">1. Test Credentials & Scope</a></li>
+        <li><a href="#mod-1">2. Module 1: Authentication & Roles</a></li>
+        <li><a href="#mod-2">3. Module 2: UI, Typography & Dark Mode</a></li>
+        <li><a href="#mod-3">4. Module 3: Executive Dashboard</a></li>
+        <li><a href="#mod-4">5. Module 4: Records Explorer (2021–2026)</a></li>
+        <li><a href="#mod-5">6. Module 5: CSV Import & History Overview</a></li>
+        <li><a href="#mod-6">7. Module 6: Forecasting Workspace</a></li>
+        <li><a href="#mod-7">8. Module 7: Model Evaluation Sandbox</a></li>
+        <li><a href="#mod-8">9. Module 8: Anomaly Monitoring</a></li>
+        <li><a href="#mod-9">10. Module 9: Tariffs & Reports</a></li>
+        <li><a href="#sus">11. System Usability Scale (SUS)</a></li>
+        <li><a href="#signoff">12. Qualitative Review & Sign-Off</a></li>
+      </ul>
+    </nav>
+
+    <section id="test-env">
+      <h2>1. Test Environment & Demo Accounts</h2>
+      <p>AQUACAST operates entirely client-side with full offline PWA capabilities. Test accounts carry different permission scopes:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Demo Username</th>
+            <th>Password</th>
+            <th>Authorized Scope & Features</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Administrator</strong></td>
+            <td><code>admin</code></td>
+            <td><code>admin123</code></td>
+            <td>Unrestricted provincial view; tariff configuration; model evaluation sandbox; broadcast announcements; dataset snapshot recovery.</td>
+          </tr>
+          <tr>
+            <td><strong>Station User</strong></td>
+            <td><code>bagocity</code></td>
+            <td><code>station123</code></td>
+            <td>Scoped strictly to Bago City (<code>NO-01</code>); Station Forecast Guide; Contact Administration channel; anomaly inquiries.</td>
+          </tr>
+          <tr>
+            <td><strong>Station User</strong></td>
+            <td><code>dumaguetecity</code></td>
+            <td><code>station123</code></td>
+            <td>Scoped strictly to Dumaguete City (<code>NOR-10</code>).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- MODULE 1 -->
+    <section id="mod-1">
+      <h2>Module 1: Authentication & Role Isolation</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-AUTH-01: Role-Based Sign-In & Navigation Scope</h3>
+          <span class="card-id">TC-AUTH-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>Navigate to the login screen. Sign in as <code>bagocity</code> / <code>station123</code>.</li>
+          <li>Review available sidebar items, the topbar station selector, and bottom navigation.</li>
+          <li>Sign out via the Account menu and sign in as <code>admin</code> / <code>admin123</code>.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          Station user sees only their municipality's data and cannot access Admin settings or broadcast composers. Admin sees full provincial controls, tariff tools, and evaluation tabs. Both screens show prototype disclaimers.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 2 -->
+    <section id="mod-2">
+      <h2>Module 2: Typography, Visual Appeal & Dark Mode</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-UI-01: Title Prominence & Visual Hierarchy</h3>
+          <span class="card-id">TC-UI-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>Navigate through <em>Dashboard</em>, <em>Consumption records</em>, and <em>Forecasting</em>.</li>
+          <li>Observe the topbar current page title, the main <code>h1</code> header, and the uppercase eyebrow badges.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          Topbar title is prominent ($22\text{px}$) and serves as a bold section indicator. Main page titles scale smoothly ($32\text{px} - 44\text{px}$) in clean modern system typography. Eyebrows render as distinct teal badges.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-UI-02: Dark Mode Inversion & High Contrast</h3>
+          <span class="card-id">TC-UI-02</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>Click the 🌙 button in the topbar (or select Dark Mode in the Account menu).</li>
+          <li>Inspect metric cards, table rows, input fields, dropdown menus, modals, and charts.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          Background transitions to deep slate/navy (<code>#0b131d</code> / <code>#141f2c</code>). Headings, numbers, and labels become crisp off-white (<code>#ffffff</code> / <code>#e2e8f0</code>) and muted slate (<code>#94a3b8</code>). No dark-on-dark text occurs anywhere. Charts repaint dynamically.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 3 -->
+    <section id="mod-3">
+      <h2>Module 3: Executive Dashboard & Monitoring</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-DASH-01: Multi-Period Scaling & Trend Chart</h3>
+          <span class="card-id">TC-DASH-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>Review the 4 metric cards on the Dashboard.</li>
+          <li>Change the reporting period selector from <em>Last 6 periods</em> to <em>Last 12</em>, <em>24</em>, and <em>36 periods</em>.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          All four metrics recalculate instantaneously without page reload. The Trend Visualization canvas chart rescales its time axis smoothly.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 4 -->
+    <section id="mod-4">
+      <h2>Module 4: Consumption Records Explorer (2021–2026)</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-REC-01: Multi-Year Dataset Search & Sorting</h3>
+          <span class="card-id">TC-REC-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>Open <strong>Consumption records</strong>.</li>
+          <li>Filter Year: <code>2023</code>, Station: <code>Bago City</code>, Status: <code>Flagged</code>.</li>
+          <li>Sort by <em>Highest consumption</em>, then reset filters.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          Filters update instantaneously across the 4,464 records spanning 2021 to 2026. Record counter displays accurate matching quantities.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 5 -->
+    <section id="mod-5">
+      <h2>Module 5: Drag-and-Drop CSV Import & Dataset History</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-IMP-01: Drag-and-Drop Import & "Overview" Button Fit</h3>
+          <span class="card-id">TC-IMP-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>As <code>admin</code>, drag and drop <code>sample-data/AQUACAST_2021_2026_mock_consumption_import.csv</code> into the dropzone.</li>
+          <li>Confirm the import in the modal dialog.</li>
+          <li>Scroll to <strong>Activity & dataset history</strong> and inspect the resulting history card and its <strong>"Overview"</strong> button.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          File validates and updates the dataset. In the history card, the <strong>"Overview"</strong> button fits cleanly inside the card box on the right. It does not stretch across the card or cause any horizontal page overflow. Clicking it displays snapshot records.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 6 -->
+    <section id="mod-6">
+      <h2>Module 6: Forecasting Workspace & Plain-Language Guide</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-FCST-01: Station User Plain-Language Forecast Guide</h3>
+          <span class="card-id">TC-FCST-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>Sign in as <code>bagocity</code> and navigate to <strong>Forecasting</strong>.</li>
+          <li>Review the summary cards under <em>"Understanding your station's forecast"</em>.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          Presents water-use pattern comparison (2021 vs 2026), next month demand estimate ($m^3$), typical historical error margin, and clear reasoning for model selection without mathematical jargon.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 7 -->
+    <section id="mod-7">
+      <h2>Module 7: Model Evaluation Sandbox & Accuracy Dashboard</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-EVAL-01: Rolling-Origin Walk-Forward Backtesting</h3>
+          <span class="card-id">TC-EVAL-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>As <code>admin</code>, open <strong>Admin settings</strong> &rarr; <strong>Model evaluation</strong>.</li>
+          <li>Click <em>"Load fictional sample"</em>, pick <code>Bago City (NO-01)</code>, and cycle through the models.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          Evaluates on 66 test months across the 2021–2026 dataset. The Forecast Accuracy Dashboard plots actual vs predicted curves and reports MAE, RMSE, and Naïve baseline MAE.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 8 -->
+    <section id="mod-8">
+      <h2>Module 8: Anomaly Monitoring & Investigation Thread</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-ANOM-01: Inquiry and Response Simulation</h3>
+          <span class="card-id">TC-ANOM-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>As <code>admin</code>, click <em>"Request info"</em> on an anomaly to compose a query with attached evidence.</li>
+          <li>Sign in as the station user, check notifications, and reply. Sign back in as admin.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          Thread persists locally, logging message timestamps, roles, and context. Disclaimers clearly state flags are inquiries rather than confirmed misconduct or leakage.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 9 -->
+    <section id="mod-9">
+      <h2>Module 9: Utility Tariff Settings & Budget Reporting</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">TC-REP-01: BACIWA Tariff Modification & Yearly Report</h3>
+          <span class="card-id">TC-REP-01</span>
+        </div>
+        <p><strong>Steps to execute:</strong></p>
+        <ol class="steps-list">
+          <li>In <strong>Admin settings</strong> &rarr; <strong>Tariff settings</strong>, change a station's meter size and save with effective date <code>2021-01-01</code>.</li>
+          <li>Open <strong>Reports</strong>, choose Yearly report for Year <code>2024</code>, and test <em>"Print report &nearr;"</em>.</li>
+        </ol>
+        <div class="expected-box">
+          <strong>Expected Result:</strong>
+          Cost calculations reflect updated tiered rates and connection fees across all 12 months. Print preview opens cleanly without sidebar navigation.
+        </div>
+        <div class="eval-row">
+          <label class="checkbox-label"><input type="checkbox"> Pass</label>
+          <label class="checkbox-label"><input type="checkbox"> Fail</label>
+          <span>Score (1-5): [ &nbsp; ]</span>
+          <span>Notes:</span>
+          <div class="notes-line"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SYSTEM USABILITY SCALE -->
+    <section id="sus">
+      <h2>System Usability Scale (SUS)</h2>
+      <p>Rate the following 10 standardized statements from <strong>1 (Strongly Disagree)</strong> to <strong>5 (Strongly Agree)</strong>:</p>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:5%">#</th>
+            <th>Questionnaire Item</th>
+            <th style="width:10%">1 (SD)</th>
+            <th style="width:10%">2 (D)</th>
+            <th style="width:10%">3 (N)</th>
+            <th style="width:10%">4 (A)</th>
+            <th style="width:10%">5 (SA)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>I think that I would like to use this system frequently for water demand monitoring.</td>
+            <td style="text-align:center"><input type="radio" name="sus1"></td>
+            <td style="text-align:center"><input type="radio" name="sus1"></td>
+            <td style="text-align:center"><input type="radio" name="sus1"></td>
+            <td style="text-align:center"><input type="radio" name="sus1"></td>
+            <td style="text-align:center"><input type="radio" name="sus1"></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>I found the system unnecessarily complex.</td>
+            <td style="text-align:center"><input type="radio" name="sus2"></td>
+            <td style="text-align:center"><input type="radio" name="sus2"></td>
+            <td style="text-align:center"><input type="radio" name="sus2"></td>
+            <td style="text-align:center"><input type="radio" name="sus2"></td>
+            <td style="text-align:center"><input type="radio" name="sus2"></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>I thought the system was easy to use and navigate.</td>
+            <td style="text-align:center"><input type="radio" name="sus3"></td>
+            <td style="text-align:center"><input type="radio" name="sus3"></td>
+            <td style="text-align:center"><input type="radio" name="sus3"></td>
+            <td style="text-align:center"><input type="radio" name="sus3"></td>
+            <td style="text-align:center"><input type="radio" name="sus3"></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>I think that I would need technical assistance to be able to use this system.</td>
+            <td style="text-align:center"><input type="radio" name="sus4"></td>
+            <td style="text-align:center"><input type="radio" name="sus4"></td>
+            <td style="text-align:center"><input type="radio" name="sus4"></td>
+            <td style="text-align:center"><input type="radio" name="sus4"></td>
+            <td style="text-align:center"><input type="radio" name="sus4"></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>I found the various functions in this system were well integrated.</td>
+            <td style="text-align:center"><input type="radio" name="sus5"></td>
+            <td style="text-align:center"><input type="radio" name="sus5"></td>
+            <td style="text-align:center"><input type="radio" name="sus5"></td>
+            <td style="text-align:center"><input type="radio" name="sus5"></td>
+            <td style="text-align:center"><input type="radio" name="sus5"></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>I thought there was too much inconsistency in typography or layouts.</td>
+            <td style="text-align:center"><input type="radio" name="sus6"></td>
+            <td style="text-align:center"><input type="radio" name="sus6"></td>
+            <td style="text-align:center"><input type="radio" name="sus6"></td>
+            <td style="text-align:center"><input type="radio" name="sus6"></td>
+            <td style="text-align:center"><input type="radio" name="sus6"></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>I would imagine that most municipal officers would learn to use this system quickly.</td>
+            <td style="text-align:center"><input type="radio" name="sus7"></td>
+            <td style="text-align:center"><input type="radio" name="sus7"></td>
+            <td style="text-align:center"><input type="radio" name="sus7"></td>
+            <td style="text-align:center"><input type="radio" name="sus7"></td>
+            <td style="text-align:center"><input type="radio" name="sus7"></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>I found the system very cumbersome to use.</td>
+            <td style="text-align:center"><input type="radio" name="sus8"></td>
+            <td style="text-align:center"><input type="radio" name="sus8"></td>
+            <td style="text-align:center"><input type="radio" name="sus8"></td>
+            <td style="text-align:center"><input type="radio" name="sus8"></td>
+            <td style="text-align:center"><input type="radio" name="sus8"></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>I felt very confident navigating the records, forecasts, and anomaly queues.</td>
+            <td style="text-align:center"><input type="radio" name="sus9"></td>
+            <td style="text-align:center"><input type="radio" name="sus9"></td>
+            <td style="text-align:center"><input type="radio" name="sus9"></td>
+            <td style="text-align:center"><input type="radio" name="sus9"></td>
+            <td style="text-align:center"><input type="radio" name="sus9"></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>I needed to learn a lot of things before I could get going with this system.</td>
+            <td style="text-align:center"><input type="radio" name="sus10"></td>
+            <td style="text-align:center"><input type="radio" name="sus10"></td>
+            <td style="text-align:center"><input type="radio" name="sus10"></td>
+            <td style="text-align:center"><input type="radio" name="sus10"></td>
+            <td style="text-align:center"><input type="radio" name="sus10"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- QUALITATIVE SIGN-OFF -->
+    <section id="signoff">
+      <h2>Qualitative Feedback & Final Recommendation</h2>
+
+      <p><strong>1. System Strengths (What performed best?):</strong></p>
+      <div class="textarea-blank"></div>
+
+      <p style="margin-top:16px;"><strong>2. Suggested Revisions (What needs improvement?):</strong></p>
+      <div class="textarea-blank"></div>
+
+      <p style="margin-top:16px;"><strong>3. Overall Pilot Deployment Verdict:</strong></p>
+      <div style="display:flex; gap:24px; margin: 12px 0 24px 0;">
+        <label class="checkbox-label"><input type="radio" name="verdict"> <strong>Approved for Pilot</strong></label>
+        <label class="checkbox-label"><input type="radio" name="verdict"> <strong>Approved with Minor Edits</strong></label>
+        <label class="checkbox-label"><input type="radio" name="verdict"> <strong>Requires Major Revisions</strong></label>
+      </div>
+
+      <table style="margin-top: 32px;">
+        <tr>
+          <td style="width:50%; padding-bottom: 30px;">
+            <p style="margin:0 0 30px 0; color:var(--slate-600);">Evaluator Signature:</p>
+            <div style="border-bottom:1px solid #64748b; width:80%;"></div>
+          </td>
+          <td style="width:50%; padding-bottom: 30px;">
+            <p style="margin:0 0 30px 0; color:var(--slate-600);">Date of Sign-off:</p>
+            <div style="border-bottom:1px solid #64748b; width:80%;"></div>
+          </td>
+        </tr>
+      </table>
+    </section>
+
+  </div>
+
+</body>
+</html>
